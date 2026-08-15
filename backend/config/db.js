@@ -3,6 +3,8 @@ const logger = require('../utils/logger');
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/lottery';
 
+console.log('[debug] MONGO_URI present:', Boolean(process.env.MONGO_URI));
+
 async function connectDB() {
   try {
     await mongoose.connect(MONGO_URI, {
