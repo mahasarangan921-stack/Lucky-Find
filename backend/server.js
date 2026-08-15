@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 const connectDB = require('./config/db');
 const logger = require('./utils/logger');
@@ -11,19 +12,34 @@ const announcementRoutes = require('./routes/announcementRoutes');
 const app = express();
 
 // CORS — allow the Vite dev server origin plus any configured origins.
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173')
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
   .map((o) => o.trim())
   .filter(Boolean);
 
 app.use(cors({
   origin(origin, callback) {
-    // Allow requests with no origin (e.g. curl, server-to-server).
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-    if (process.env.NODE_ENV === 'production' && allowedOrigins[0] !== '*') {
-      return callback(new Error('Not allowed by CORS'));
+    // Allow requests without an Origin header
+    if (!origin) {
+      return callback(null, true);
     }
-    return callback(null, true);
+
+    // Allow the same origin when Express serves the frontend
+    if (origin === `http://localhost:${process.env.PORT || 5001}`) {
+      return callback(null, true);
+    }
+
+    // Allow explicitly configured origins
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // During local development, allow everything
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
   },
 }));
 
@@ -46,10 +62,18 @@ app.use('/api/lottery', lotteryRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/announcements', announcementRoutes);
 
-// Test Route
-app.get("/", (req, res) => {
-  res.send("Backend is running 🚀");
-});
+// Serve React/Vite frontend in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../dist")));
+
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../dist", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("Backend is running 🚀");
+  });
+}
 
 app.get('/api/health', (req, res) => {
   res.json({ ok: true, service: 'lottery-api', database: connectDB.isConnected() });
@@ -71,6 +95,10 @@ app.use((err, req, res, next) => {
 // Port
 const PORT = Number(process.env.PORT || 5001);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   logger.info(`Server is running on http://localhost:${PORT}`);
+});
+
+server.on('error', (err) => {
+  logger.error('Server error:', err);
 });
