@@ -25,9 +25,13 @@ app.use(cors({
     }
 
     // Allow the same origin when Express serves the frontend
-    if (origin === `http://localhost:${process.env.PORT || 5001}`) {
-      return callback(null, true);
-    }
+    // Allow the same origin when Express serves the frontend
+const sameOriginLocal = `http://localhost:${process.env.PORT || 5001}`;
+const sameOriginProd = process.env.RENDER_EXTERNAL_URL; // Render sets this automatically, e.g. https://lucky-find.onrender.com
+
+if (origin === sameOriginLocal || (sameOriginProd && origin === sameOriginProd)) {
+  return callback(null, true);
+}
 
     // Allow explicitly configured origins
     if (allowedOrigins.includes(origin)) {

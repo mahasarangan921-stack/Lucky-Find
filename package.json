@@ -4,13 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "backend": "npm --prefix backend start",
-    "backend:dev": "npm --prefix backend run dev",
-    "build": "vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
-  },
+  "dev": "vite",
+  "start": "npm --prefix backend start",
+  "backend": "npm --prefix backend start",
+  "backend:dev": "npm --prefix backend run dev",
+  "build": "vite build",
+  "lint": "oxlint",
+  "preview": "vite preview"
+},
   "dependencies": {
     "lucide-react": "^1.26.0",
     "react": "^19.2.7",
