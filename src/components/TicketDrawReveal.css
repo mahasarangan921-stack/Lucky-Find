@@ -1,0 +1,141 @@
+.tdr {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.tdr-ticket {
+  position: relative;
+  width: min(480px, 92vw);
+  padding: 28px 30px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #132a1e, #0f221a);
+  border: 1px solid rgba(212, 176, 91, 0.22);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* perforated edge, like a torn ticket stub */
+.tdr-ticket::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background-image: radial-gradient(
+    circle,
+    rgba(12, 26, 19, 1) 3px,
+    transparent 3.5px
+  );
+  background-size: 16px 16px;
+  background-position: -8px top;
+  background-repeat: repeat-x;
+  height: 8px;
+  top: -4px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.tdr-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.tdr-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9fb0a3;
+}
+
+.tdr-number {
+  display: flex;
+  gap: 4px;
+  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+  font-size: clamp(28px, 6vw, 40px);
+  font-weight: 600;
+  color: #f2ede1;
+}
+
+.tdr-digit {
+  display: inline-block;
+  min-width: 0.65ch;
+}
+
+.phase-rolling .tdr-digit {
+  animation: tdr-flicker 0.07s linear infinite;
+}
+@keyframes tdr-flicker {
+  from { transform: translateY(-2px); }
+  to { transform: translateY(2px); }
+}
+
+/* the seal / stamp moment */
+.tdr-seal {
+  margin: 18px auto 0;
+  width: fit-content;
+  padding: 8px 22px;
+  border-radius: 999px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  transform: scale(2.4) rotate(-8deg);
+  opacity: 0;
+  animation: tdr-stamp 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) forwards;
+}
+.tdr-seal.static {
+  animation: none;
+  transform: rotate(-4deg) scale(1);
+  opacity: 1;
+}
+.seal-win {
+  color: #0c1a13;
+  background: #d9ac47;
+  box-shadow: 0 0 0 2px rgba(217, 172, 71, 0.35);
+}
+.seal-none {
+  color: #f2ede1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+@keyframes tdr-stamp {
+  0% { transform: scale(2.4) rotate(-8deg); opacity: 0; }
+  60% { transform: scale(0.9) rotate(-4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-4deg); opacity: 1; }
+}
+
+.tdr-detail {
+  margin-top: 10px;
+  animation: tdr-fadeup 0.5s ease-out;
+}
+@keyframes tdr-fadeup {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tdr-drink {
+  margin-top: 14px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  color: #f2ede1;
+}
+.tdr-note {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #9fb0a3;
+  line-height: 1.5;
+}
+.tdr-price {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #7fd99a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tdr-seal { animation: none; opacity: 1; transform: rotate(-4deg) scale(1); }
+  .phase-rolling .tdr-digit { animation: none; }
+}

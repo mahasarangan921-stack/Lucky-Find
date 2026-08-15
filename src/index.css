@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", serif;
+  --font-mono-num: "JetBrains Mono", monospace;
+  --font-body: "Manrope", sans-serif;
+
+  --color-ink: #0a1a13;
+  --color-ink-soft: #0f2419;
+  --color-ink-panel: #142c1f;
+  --color-ink-line: #223c2c;
+
+  --color-gold: #d4a72c;
+  --color-gold-bright: #f2c94c;
+  --color-gold-dim: #8a7127;
+
+  --color-paper: #f3ecd8;
+  --color-paper-dim: #e5dcc2;
+
+  --color-maroon: #a23b46;
+  --color-maroon-bright: #c94c58;
+
+  --color-emerald: #3e9c6d;
+  --color-emerald-bright: #4fc98a;
+
+  --color-text-hi: #f1ede0;
+  --color-text-lo: #9fb0a4;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-text-hi);
+  font-family: var(--font-body);
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(212, 167, 44, 0.07), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(62, 156, 109, 0.06), transparent 45%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-ink); }
+::-webkit-scrollbar-thumb { background: var(--color-ink-line); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-gold-dim); }
+
+/* Ticket perforation — the signature motif.
+   A dashed seam with punched notches, dividing a
+   ticket card into "number" and "prize" stubs. */
+.perforation {
+  position: relative;
+}
+.perforation::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-left: 2px dashed rgba(241, 237, 224, 0.22);
+  pointer-events: none;
+}
+.perforation::after {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: -9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  box-shadow: 0 calc(100% + 18px) 0 0 var(--color-ink);
+  pointer-events: none;
+}
+
+.perforation-h { position: relative; }
+.perforation-h::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 2px dashed rgba(241, 237, 224, 0.22);
+  pointer-events: none;
+}
+
+.text-balance { text-wrap: balance; }
+.font-display { font-family: var(--font-display); }
+.font-mono-num {
+  font-family: var(--font-mono-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 700ms ease,
+    transform 700ms ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(212,167,44,0.18), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(1.5deg); }
+}
+.animate-drift { animation: drift 7s ease-in-out infinite; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-rise { animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift, .shimmer, .animate-rise { animation: none; }
+  html { scroll-behavior: auto; }
+}

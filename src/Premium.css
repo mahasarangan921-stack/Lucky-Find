@@ -1,0 +1,141 @@
+/* ============================================================
+   LUCKY FIND — premium polish layer
+   Paste into index.css (or import separately). Adjust the vars
+   below to match your exact existing greens/golds if they differ.
+   ============================================================ */
+
+:root {
+  --lf-bg: #0c1a13;
+  --lf-bg-2: #10221a;
+  --lf-card: #132a1e;
+  --lf-border: rgba(212, 176, 91, 0.18);
+  --lf-border-hover: rgba(212, 176, 91, 0.55);
+  --lf-gold: #d9ac47;
+  --lf-gold-soft: rgba(217, 172, 71, 0.12);
+  --lf-cream: #f2ede1;
+  --lf-muted: #9fb0a3;
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------- 1. Film-grain atmosphere ----------
+   Adds the same non-flat, cinematic texture Noir uses.
+   Drop <div className="lf-grain" /> once, as the last child of <body>/App root. */
+.lf-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- 2. Scroll reveal ----------
+   Pair with useScrollReveal.js. Add className="reveal" to any card/section,
+   and style={{ '--delay': index }} to stagger a group. */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--ease-premium), transform 0.7s var(--ease-premium);
+  transition-delay: calc(var(--delay, 0) * 70ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- 3. Glass / depth cards ----------
+   Apply to your dashboard cards, result cards, category cards.
+   Replace flat bg with this for a card that has real presence. */
+.lf-card {
+  background: linear-gradient(180deg, var(--lf-card), var(--lf-bg-2));
+  border: 1px solid var(--lf-border);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  transition: transform 0.4s var(--ease-premium),
+    border-color 0.4s var(--ease-premium),
+    box-shadow 0.4s var(--ease-premium);
+}
+.lf-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--lf-border-hover);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.6),
+    0 0 0 1px var(--lf-gold-soft) inset;
+}
+
+/* ---------- 4. Nav links with animated underline ---------- */
+.lf-nav-link {
+  position: relative;
+  color: var(--lf-muted);
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+.lf-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 1.5px;
+  background: var(--lf-gold);
+  transition: width 0.35s var(--ease-premium);
+}
+.lf-nav-link:hover,
+.lf-nav-link.active {
+  color: var(--lf-cream);
+}
+.lf-nav-link:hover::after,
+.lf-nav-link.active::after {
+  width: 100%;
+}
+
+/* ---------- 5. Primary button with a soft gold sheen sweep ---------- */
+.lf-btn-gold {
+  position: relative;
+  overflow: hidden;
+  background: var(--lf-gold);
+  color: #1a1408;
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: transform 0.3s var(--ease-premium), filter 0.3s var(--ease-premium);
+}
+.lf-btn-gold:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+.lf-btn-gold::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.6s var(--ease-premium);
+}
+.lf-btn-gold:hover::before {
+  left: 130%;
+}
+
+/* ---------- 6. Floating hero ticket (ambient motion) ----------
+   Give your hero's ticket/coin icon this class. Subtle, endless drift —
+   the equivalent of Noir's floating beans, but restrained (one element, not six). */
+.lf-float {
+  animation: lf-drift 6s ease-in-out infinite;
+}
+@keyframes lf-drift {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-14px) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none; opacity: 1; transform: none; }
+  .lf-float { animation: none; }
+}
